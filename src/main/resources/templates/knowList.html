@@ -6,8 +6,12 @@
 <div th:insert="fragment/Fragments.html::menu"></div>
 <form th:action="@{/know/list}" method="get" th:object="${form}">
     <div class="form-group">
-        <label th:for="title">제목</label>
-        <input type="text" th:field="*{title}">
+        <select class="form-select" th:field="*{search}" aria-label="Default select example">
+            <option value="TITLE">제목</option>
+            <option value="CONTENT">내용</option>
+        </select>
+        <input type="text" th:field="*{searchInput}" class="form-control
+">
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-primary mb-3">조회</button>

@@ -3,6 +3,8 @@ package com.ga.jpatest.elasticsearch.service;
 import com.ga.jpatest.elasticsearch.Know;
 import com.ga.jpatest.elasticsearch.dto.KnowDto;
 import com.ga.jpatest.elasticsearch.dto.KnowCreateForm;
+import com.ga.jpatest.elasticsearch.dto.KnowSearchForm;
+import com.ga.jpatest.elasticsearch.dto.Search;
 import com.ga.jpatest.elasticsearch.repository.KnowRepository;
 import com.ga.jpatest.elasticsearch.repository.search.KnowSearchRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,15 +37,22 @@ public class KnowService {
 
     }
 
-    public List<KnowDto> searchByTitle(String title) {
+    public List<KnowDto> searchByTitleOrContent(KnowSearchForm knowSearchForm) {
         List<KnowDto> list = new ArrayList<>();
-        if(StringUtils.isEmpty(title)){
+        if(StringUtils.isEmpty(knowSearchForm.getSearchInput())){
             return findAll(list);
         }
-        return knowSearchRepository.findByTitleContaining(title)
+        if(knowSearchForm.getSearch().equals(Search.TITLE)){
+            return knowSearchRepository.findByTitleContaining(knowSearchForm.getSearchInput())
+                    .stream()
+                    .map(KnowDto::from)
+                    .collect(Collectors.toList());
+        }
+        return knowSearchRepository.findByContentContaining(knowSearchForm.getSearchInput())
                 .stream()
                 .map(KnowDto::from)
                 .collect(Collectors.toList());
+
     }
 
     private List<KnowDto> findAll(List<KnowDto> list) {

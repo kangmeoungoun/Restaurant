@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface KnowSearchRepository extends ElasticsearchRepository<Know,Long> {
     List<Know> findByTitleContaining(String title);
+    List<Know> findByContentContaining(String content);
 }

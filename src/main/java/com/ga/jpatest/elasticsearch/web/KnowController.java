@@ -45,8 +45,8 @@ public class KnowController {
 
     @GetMapping("/list")
     public String search(@ModelAttribute("form") KnowSearchForm knowSearchForm, Model model) {
-        log.info("title {}", knowSearchForm.getTitle());
-        List<KnowDto> knows = knowService.searchByTitle(knowSearchForm.getTitle());
+        log.info("input {}", knowSearchForm.getSearchInput());
+        List<KnowDto> knows = knowService.searchByTitleOrContent(knowSearchForm);
         model.addAttribute("knows", knows);
         return "knowList";
     }
