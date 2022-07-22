@@ -33,6 +33,7 @@ public class KnowController {
 
     @PostMapping("/{id}/edit")
     public String knowUpdate(@ModelAttribute("form") KnowUpdateForm knowUpdateForm) {
+        knowService.update(knowUpdateForm);
         return "redirect:/";
     }
 

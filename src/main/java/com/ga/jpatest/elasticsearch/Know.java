@@ -1,5 +1,6 @@
 package com.ga.jpatest.elasticsearch;
 
+import com.ga.jpatest.elasticsearch.dto.KnowUpdateForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +29,8 @@ public class Know {
         this.content = content;
     }
 
+    public void change(KnowUpdateForm knowUpdateForm) {
+        this.title = knowUpdateForm.getTitle();
+        this.content = knowUpdateForm.getContent();
+    }
 }
