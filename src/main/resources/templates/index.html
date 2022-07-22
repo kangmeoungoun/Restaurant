@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="fragment/Fragments.html::header">
+
+</head>
+<body>
+    <div th:insert="fragment/Fragments.html::menu"></div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <a th:href="@{/know}" class="btn btn-primary" role="button" >ElasticSearch 등록</a>
+        <a th:href="@{/know/list}" class="btn btn-primary" role="button" >ElasticSearch 조회</a>
+        <a th:href="@{/restaurants}" class="btn btn-primary" role="button" >음식점 목록</a>
+        <a th:href="@{/restaurants}" class="btn btn-primary" role="button" >음식점 목록</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="fragment/Fragments.html :: header">
+</head>
+<body>
+<div th:insert="fragment/Fragments.html::menu"></div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">NO</th>
+        <th scope="col">상호명</th>
+        <th scope="col">주소</th>
+        <th scope="col">업종</th>
+        <th scope="col">전화번호</th>
+        <th scope="col">특이사항</th>
+        <th scope="col">코멘트</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="resturant : ${resturants}">
+        <th scope="row" th:text="${resturantStat.index}"></th>
+        <td th:text="${resturant.getName()}"></td>
+        <td th:text="${resturant.getPlace()}"></td>
+        <td th:text="${resturant.getPhoneNumber()}"></td>
+        <td th:text="${resturant.getSectors()}"></td>
+        <td th:text="${resturant.getRemark()}"></td>
+        <td ><a th:href="@{comment/restaurant/{id}(id=${resturant.getId()})}" class="btn btn-primary" role="button" >코멘트</a></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

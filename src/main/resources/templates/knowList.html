@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="fragment/Fragments.html :: header">
+</head>
+<body>
+<div th:insert="fragment/Fragments.html::menu"></div>
+<form th:action="@{/know/list}" method="get" th:object="${form}">
+    <div class="form-group">
+        <label th:for="title">제목</label>
+        <input type="text" th:field="*{title}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">조회</button>
+    </div>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">NO</th>
+        <th scope="col">아이디</th>
+        <th scope="col">제목</th>
+        <th scope="col">내욕</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="know : ${knows}">
+        <th scope="row" th:text="${knowStat.index}"></th>
+        <td><a th:href="@{/know/{id}/edit(id=${know.getId()})}" class="btn btn-primary" role="button"  th:text="${know.getId()}"></a></td>
+        <td th:text="${know.getTitle()}"></td>
+        <td th:text="${know.getContent()}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
