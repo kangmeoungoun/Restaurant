@@ -1,8 +1,8 @@
 package com.ga.jpatest.lunch.web;
 
-import com.ga.jpatest.lunch.domain.Restaurant;
 import com.ga.jpatest.lunch.repository.RestaurantRepository;
-import com.ga.jpatest.lunch.web.dto.RestaurantForm;
+import com.ga.jpatest.lunch.service.RestaurantService;
+import com.ga.jpatest.lunch.web.dto.RestaurantInsertForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,18 +19,21 @@ import javax.validation.Valid;
 @Slf4j
 public class RestaurantController {
 
+    private final RestaurantService restaurantService;
     private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/restaurant/new")
     public String Restaurant(Model model){
-        model.addAttribute("form", new RestaurantForm());
+        model.addAttribute("form", new RestaurantInsertForm());
         return "restaurant/createRestaurantForm";
     }
     @PostMapping("/restaurant/new")
-    public String RestaurantCreate(@ModelAttribute(name = "form") @Valid RestaurantForm form, BindingResult bindingResult){
+    public String RestaurantCreate(@ModelAttribute(name = "form") @Valid RestaurantInsertForm form,
+                                   BindingResult bindingResult){
         if(bindingResult.hasErrors()){
            return "restaurant/createRestaurantForm";
         }
+        restaurantService.save(form);
         return "redirect:/";
     }
 

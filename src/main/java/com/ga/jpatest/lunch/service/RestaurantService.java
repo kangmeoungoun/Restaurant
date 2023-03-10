@@ -1,8 +1,10 @@
 package com.ga.jpatest.lunch.service;
 
 import com.ga.jpatest.lunch.domain.Restaurant;
+import com.ga.jpatest.lunch.domain.embedded.Address;
 import com.ga.jpatest.lunch.parser.CSVParser;
 import com.ga.jpatest.lunch.repository.RestaurantRepository;
+import com.ga.jpatest.lunch.web.dto.RestaurantInsertForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -22,16 +24,16 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    @PostConstruct
+
     @Transactional
-    public void init() throws IOException {
-        final String delimiter = "\\|";
-        CSVParser csvParser = new CSVParser("static/Restaurants.csv");
-        csvParser.parse()
-                .forEach(str->{
-                    String[] split = str.split(delimiter);
-                    restaurantRepository.save(new Restaurant(split[0], split[1], split[2], split[3]));
-                });
+    public void save(RestaurantInsertForm form) {
+        Restaurant restaurant = Restaurant.createRestaurant(form);
+        restaurantRepository.save(restaurant);
+    }
+    public Restaurant findById(Long id){
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 음식점을 찾을수가 없습니다."));
+        return restaurant;
     }
 
 }

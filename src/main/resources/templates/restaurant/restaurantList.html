@@ -10,8 +10,9 @@
         <th scope="col">NO</th>
         <th scope="col">상호명</th>
         <th scope="col">주소</th>
-        <th scope="col">업종</th>
+        <th scope="col">우편번호</th>
         <th scope="col">전화번호</th>
+        <th scope="col">업종</th>
         <th scope="col">특이사항</th>
         <th scope="col">코멘트</th>
     </tr>
@@ -20,8 +21,17 @@
 
     <tr th:each="resturant : ${resturants}">
         <th scope="row" th:text="${resturantStat.index}"></th>
-        <td th:text="${resturant.getName()}"></td>
-        <td th:text="${resturant.getPlace()}"></td>
+        <td>
+            <button th:text="${resturant.getName()}"
+                    type="button" class="btn btn-primary"
+                    th:attr="data-bs-id=${resturant.getId()},data-bs-title=${resturant.getName()}"
+
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    data-bs-whatever="@mdo"></button>
+        </td>
+        <td th:text="${resturant.getAddress()?.getStreet()}"></td>
+        <td th:text="${resturant.getAddress()?.getZipcode()}"></td>
         <td th:text="${resturant.getPhoneNumber()}"></td>
         <td th:text="${resturant.getSectors()}"></td>
         <td th:text="${resturant.getRemark()}"></td>
@@ -30,5 +40,116 @@
     </tbody>
 </table>
 
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">상호명</label>
+                        <input type="text" class="form-control" id="recipient-name" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+                <button type="button" class="btn btn-outline-danger" disabled id ="heart-default">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"></path>
+                    </svg>
+                </button>
+                <button type="button" class="btn btn-outline-danger"  disabled id ="heart-fill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
+<script>
+    const exampleModal = document.getElementById('exampleModal')
+    const heartDefault = document.getElementById('heart-default')
+    const heartFill = document.getElementById('heart-fill')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        const button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        const title = button.getAttribute('data-bs-title')
+        const id = button.getAttribute('data-bs-id')
+
+        heartDefault.setAttribute("data-bs-id", id);
+        heartFill.setAttribute("data-bs-id", id);
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        const modalTitle = exampleModal.querySelector('.modal-title')
+        const modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+        modalTitle.textContent = title
+        modalBodyInput.value = title
+
+        $.ajax({
+            url: `/heart/restaurant/${id}`,
+            method: 'get',
+        }).done(function(data){
+            $("#heart-default").attr("disabled",true);
+            $("#heart-fill").attr("disabled",false);
+            console.log("%o",data);
+            if(data.heart){
+                $("#heart-default").attr("disabled",false);
+                $("#heart-fill").attr("disabled",true);
+            }
+        }).fail(function(err){
+
+        })
+    });
+    heartDefault.addEventListener('click', (event) =>{
+        const id = heartDefault.getAttribute('data-bs-id')
+        $.ajax({
+            url: `/heart/restaurant/${id}`,
+            method: 'delete',
+        }).done(function(data){
+            $("#heart-default").attr("disabled",true);
+            $("#heart-fill").attr("disabled",false);
+            if(data.isHeart){
+                $("#heart-default").attr("disabled",false);
+                $("#heart-fill").attr("disabled",true);
+            }
+        }).fail(function(err){
+
+        })
+    });
+    heartFill.addEventListener('click', (event) =>{
+        const id = heartFill.getAttribute('data-bs-id')
+        $.ajax({
+            url: `/heart/restaurant/${id}`,
+            method: 'post',
+        }).done(function(data){
+            $("#heart-default").attr("disabled",true);
+            $("#heart-fill").attr("disabled",false);
+            if(data.isHeart){
+                $("#heart-default").attr("disabled",false);
+                $("#heart-fill").attr("disabled",true);
+            }
+        }).fail(function(err){
+
+        })
+    });
+</script>
 </html>

@@ -6,21 +6,28 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
-        default_batch_fetch_size: 100
-    open-in-view: false
-    show-sql: true
+        default_batch_fetch_size: 500
+    open-in-view: true
   thymeleaf:
     cache: false
   main:
     allow-bean-definition-overriding: true
+  data:
+    web:
+      pageable:
+        default-page-size: 10
 
-server:
-  port: 3000
 logging:
   level:
     org:
-      elasticsearch: debug
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
